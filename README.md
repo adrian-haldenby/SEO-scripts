@@ -5,6 +5,7 @@ Adrian Haldenby a.haldenby@gamil.com
 Just a little repo to store any usefull R and python SEO scripts
 
 **CTR estimator**
+
 Estimates Google click-through rate with generalized additive model based on webmaster tools data dump or, if you don't have enough data use the data from the  http://www.optify.net study.
 
 **SEO Competitor Opportunities**
