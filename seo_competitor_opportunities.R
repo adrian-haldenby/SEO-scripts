@@ -1,4 +1,3 @@
-library(gam)
 library(tm)
 library(reshape)
 library(ggplot2)
@@ -14,22 +13,8 @@ DIRECTORY = '~/Documents/SEO research/'
 ##############################
 #Fit a curve with a Spline with GAM and linear model to the CTR data to be used in a function to estimate volume of traffic based
 # on keyword position and rank
-
-#Load known points
-#Sources: http://www.smartinsights.com/search-engine-optimisation-seo/seo-analytics/the-number-one-spot-how-to-use-the-new-search-curve-ctr-data/
-
-av.ctr <- c(.364,.125,.095,.079,.061,.041,.038,.035,.03,.022,.026,.015,.013,.011,.012,.012,.014,.013,.014,.014)
-av.rank <- seq(1:20)
-#add in square root 
-av.ctr.sqrt <- sqrt(av.rank)
-av.df <- as.data.frame(cbind(av.ctr,av.rank))
-colnames(av.df)<- c("CTR","Rank")
-
-#create models 
-av.model.gam <- gam(CTR~s(Rank),data=av.df,family=poisson)
-
-#simple diagnostic plot
-plot(av.model.gam$fitted~av.ctr)
+# Will provide us with with final gam model : av.model.gam
+source('~/Estimate CTR/CTR-est.R')
 
 
 ################################
@@ -172,7 +157,7 @@ comp.keywords.mrg<- comp.keywords.mrg[!is.na(comp.keywords.mrg$variable.x),]
 save.path = paste(DIRECTORY,NAME,sep="")
 dir.create(save.path, showWarnings = TRUE, recursive = FALSE)
 #
-foreach(i=1:length(tokens.with.potential)) %do% {
+foreach(i=1:length(tokens.with.potential)) %dopar% {
   topic <- as.character(tokens.with.potential[i])
   file.name <- paste(topic,"topic keywords.csv",sep=" ")
   print(file.name)
@@ -181,8 +166,4 @@ foreach(i=1:length(tokens.with.potential)) %do% {
   report.by.topic <- report.by.topic[order(-report.by.topic$final.kw.value),]
   write.table(report.by.topic, file=file.name, row.names=FALSE, col.names=FALSE, sep=",")
 }
-
-
-
-
 
